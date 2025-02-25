@@ -58,8 +58,25 @@ const translations = {
     tens: { 10: "weli see", 11: "weli see resi see", 12: "weli see resi kai-rua", 13: "weli see resi kai-telu", 14: "weli see resi kai-haa", 15: "weli see resi kai-lima", 16: "weli see resi kai-lima resi see", 17: "weli see resi kai-lima resi kai-rua", 18: "weli see resi kai-lima resi kai-telu", 19: "weli see resi kai-lima resi kai-haa", 20: "weli kai-rua", 30: "weli kai-telu", 40: "weli kai-haa", 50: "weli kai-lima", 60: "weli kai-lima resi see", 70: "weli kai-lima resi kai-rua", 80: "weli kai-lima resi kai-telu", 90: "weli kai-lima resi kai-haa" },
     hundreds: { 100: "rasa see", 200: "rasa kai-rua", 300: "rasa kai-telu", 400: "rasa kai-haa", 500: "rasa kai-lima", 600: "rasa kai-lima resi see", 700: "rasa kai-lima resi kai-rua", 800: "rasa kai-lima resi kai-telu", 900: "rasa kai-lima resi kai-haa" },
     thousands: { 1000: "rihun see", 2000: "rihun kai-rua", 3000: "rihun kai-telu", 4000: "rihun kai-haa", 5000: "rihun kai-lima", 6000: "rihun kai-lima resi see", 7000: "rihun kai-lima resi kai-rua", 8000: "rihun kai-lima resi kai-telu", 9000: "rihun kai-lima resi kai-haa" }
+  },
+  makalero: {
+    numbers: { 1: "u", 2: "loloi", 3: "lolitu", 4: "fat", 5: "lima", 6: "douh", 7: "fitu", 8: "afo", 9: "siua" },
+    tens: { 10: "ru", 20: "ru loloi", 30: "ru lolitu", 40: "ru fat", 50: "ru lima", 60: "ru douh", 70: "ru fitu", 80: "ru afo", 90: "ru siua" },
+    hundreds: { 100: "rasa u", 200: "rasa loloi", 300: "rasa lolitu", 400: "rasa fat", 500: "rasa lima", 600: "rasa douh", 700: "rasa fitu", 800: "rasa afo", 900: "rasa siua" },
+    thousands: { 1000: "rihun u", 2000: "rihun loloi", 3000: "rihun lolitu", 4000: "rihun fat", 5000: "rihun lima", 6000: "rihun douh", 7000: "rihun fitu", 8000: "rihun afo", 9000: "rihun siua" }
+  },
+  Bunak: {
+    numbers: { 1: "uen", 2: "hiloqo(n)", 3: "goniqo(n)", 4: "goniqil", 5: "gonciet", 6: "tomol", 7: "hitu", 8: "walu", 9: "siwe" },
+    tens: { 10: "sogo", 20: "sogo hiloqo(n)", 30: "sogo goniqo(n)", 40: "sogo goniqil", 50: "sogo gonciet", 60: "sogo tomol", 70: "sogo hitu", 80: "sogo walu", 90: "sogo siwe" },
+    hundreds: { 100: "atus uen", 200: "atus hiloqo(n)", 300: "atus goniqo(n)", 400: "atus goniqil", 500: "atus gonciet", 600: "atus tomol", 700: "atus hitu", 800: "atus walu", 900: "atus siwe" },
+    thousands: { 1000: "lihur uen", 2000: "lihur hiloqo(n)", 3000: "lihur goniqo(n)", 4000: "lihur goniqil", 5000: "lihur gonciet", 6000: "lihur tomol", 7000: "lihur hitu", 8000: "lihur walu", 9000: "lihur siwe" }
+  },
+  Bekais: {
+    numbers: { 1: "isa", 2: "rua", 3: "tolu", 4: "hoat", 5: "lima", 6: "inan", 7: "hitu", 8: "walu", 9: "siwi"},
+    tens: { 10: "sakulu", 20: "ruakulu", 30: "tolukulu", 40: "hoatkulu", 50: "limakulu", 60: "inankulu", 70: "hitukulu", 80: "walukulu", 90: "siwikulu"},
+    hundreds: { 100: "atus isa", 200: "atus rua", 300: "atus tolu", 400: "atus hoat", 500: "atus lima", 600: "atus inan", 700: "atus hitu", 800: "atus walu", 900: "atus siwi"},
+    thousands: { 1000: "rihun isa", 2000: "rihun rua", 3000: "rihun tolu", 4000: "rihun hoat", 5000: "rihun lima", 6000: "rihun inan", 7000: "rihun hitu", 8000: "rihun walu", 9000: "rihun siwi"}
   }
-
 };
 
 // Conversion function for Bahasa
@@ -133,6 +150,7 @@ function convertToTetun(number) {
 
   return numStr.trim();
 }
+
 // Conversion function for Portuguese
 function convertToPortuguese(number) {
   const { numbers, tens, hundreds } = translations.portuguese;
@@ -467,6 +485,114 @@ function convertToNaueti(number) {
   return numStr.trim();
 }
 
+//Conversion function for Makalero
+function convertToMakalero(number) {
+  const { numbers, tens, hundreds, thousands } = translations.makalero;
+  let numStr = "";
+
+  if (number >= 1000) {
+    let thousandsPlace = Math.floor(number / 1000);
+    numStr += thousands[thousandsPlace * 1000] + " ";
+    number %= 1000;
+  }
+
+  if (number >= 100) {
+    let hundredsPlace = Math.floor(number / 100);
+    numStr += hundreds[hundredsPlace * 100] + " ";
+    number %= 100;
+  }
+
+  if (number >= 20) {
+    let tensPlace = Math.floor(number / 10) * 10;
+    numStr += tens[tensPlace] + " ";
+    number %= 10;
+    if (number > 0) {
+      numStr += "resi-" + numbers[number];
+    }
+  } else if (number > 10) {
+    numStr += tens[10] + " resin-" + numbers[number % 10];
+    number = 0;
+  } else if (number === 10) {
+    numStr += tens[10];
+    number = 0;
+  } else if (number > 0) {
+    numStr += numbers[number];
+  }
+
+  return numStr.trim();
+}
+
+//Conversion function for Bunak
+function convertToBunak(number) {
+  const { numbers, tens, hundreds, thousands } = translations.Bunak;
+  let numStr = "";
+
+  if (number >= 1000) {
+    let thousandsPlace = Math.floor(number / 1000);
+    numStr += thousands[thousandsPlace * 1000] + " ";
+    number %= 1000;
+  }
+
+  if (number >= 100) {
+    let hundredsPlace = Math.floor(number / 100);
+    numStr += hundreds[hundredsPlace * 100] + " ";
+    number %= 100;
+  }
+
+  if (number >= 20) {
+    let tensPlace = Math.floor(number / 10) * 10;
+    numStr += tens[tensPlace] + " ";
+    number %= 10;
+    if (number > 0) {
+      numStr += "resin " + numbers[number];
+    }
+  } else if (number > 10) {
+    numStr += tens[10] + " resin " + numbers[number % 10];
+    number = 0;
+  } else if (number === 10) {
+    numStr += tens[10];
+    number = 0;
+  } else if (number > 0) {
+    numStr += numbers[number];
+  }
+
+  return numStr.trim();
+}
+
+//Conversion to Bekais
+function convertToBekais(number) {
+  const {numbers, tens, hundreds, thousands} = translations.Bekais;
+  let numStr = "";
+
+  if (number >= 1000) {
+    let thousandsPlace = Math.floor(number / 1000);
+    numStr += thousands[thousandsPlace * 1000] + " ";
+    number %= 1000;
+  }
+
+  if (number >= 100) {
+    let hundredsPlace = Math.floor(number / 100);
+    numStr += hundreds[hundredsPlace * 100] + " ";
+    number %= 100;
+  }
+
+  if (number >= 20) {
+    let tensPlace = Math.floor(number / 10) * 10;
+    numStr += tens[tensPlace] + " ";
+    number %= 10;
+    if (number > 0) {
+      numStr += "resin " + numbers[number];
+    }
+  } else if (number >= 10) {
+    numStr += tens[Math.floor(number/10)*10] + " resin " + numbers[number%10];
+    number = 0;
+  } else if (number > 0) {
+    numStr += numbers[number];
+  }
+
+  return numStr.trim();
+}
+
 // Function to capitalize the first letter of a string
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
@@ -485,7 +611,7 @@ function spellOutNumber(event) {
     return;
   }
 
-  const languages = ['tetun', 'portuguese', 'bahasa', 'english', 'mambae', 'makasae', 'tokodede', 'fataluku', 'waimaa', 'midiki', 'naueti'];
+  const languages = ['tetun', 'portuguese', 'bahasa', 'english', 'mambae', 'makasae', 'tokodede', 'fataluku', 'waimaa', 'midiki', 'naueti', 'makalero', 'bunak', 'bekais'];
   let tableContent = '<table><tr><th>Language</th><th>Spelled Out Number</th></tr>';
 
   languages.forEach(language => {
@@ -524,6 +650,15 @@ function spellOutNumber(event) {
       case 'naueti':
         numStr = convertToNaueti(number);
         break;
+      case 'makalero':
+        numStr = convertToMakalero(number);
+        break;
+      case 'bunak':
+        numStr = convertToBunak(number);
+        break;
+        case 'bekais':
+          numStr = convertToBekais(number);
+          break;
     }
     tableContent += `<tr><td>${capitalize(language)}</td><td>${numStr}</td></tr>`;
   });
