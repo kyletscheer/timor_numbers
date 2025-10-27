@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Timor Numbers</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css"
+    rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <style>
+    footer {
+      padding: 10px 0;
+      border-top: solid 1px;
+      width: 100%;
+      text-align: center;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+    }
+
+    #result {
+      margin-bottom: 100px;
+    }
+  </style>
+</head>
+
+<body>
+  <main class="py-5">
+    <div class="container">
+      <!-- Header for the number generator application -->
+      <!-- Theme toggle moved outside collapse -->
+      <div class="theme-toggle" id="themeToggle" role="button" aria-label="Toggle theme">
+        <i class="bi bi-sun-fill"></i>
+      </div>
+      <h2>Timor Number Generator</h2>
+      <h3>Tetun, Portuguese, Bahasa, English, Mambae, Makasae, Tokodede, Fataluku, Waima'a, Midiki, Naueti, Makalero, Bunak, Bekais, Kemak, Baikeno Numbers
+      </h3>
+      <!-- Form to input a number and submit for conversion -->
+      <form onsubmit="spellOutNumber(event)">
+        <label for="number">Enter a number (1-9999):</label>
+        <input type="number" id="number" min="1" max="9999" required>
+        <button type="submit">Convert</button>
+      </form>
+
+      <!-- Div to display the conversion results -->
+      <div id="result"></div>
+    </div>
+  </main>
+  <footer>
+    <p>&copy; <a href="https://kylescheer.com" target="_blank">Kyle Scheer</a> 2024. Credit to Andy Kline, Max Calkins, Grayson Edgemon, and Sina
+      Barzegar. <a href="https://en.wikipedia.org/wiki/Languages_of_East_Timor" target="_blank">Timor Language
+        Information</a></p>
+    <h5><i>Have another language in Timor not yet included? Spotted an error? Let me know at
+        <u>hi@kylescheer.com.</u></i></h5>
+
+  </footer>
+  <script src="script.js"></script>
+  <script src="darkmode.js"></script>
+</body>
+
+</html>

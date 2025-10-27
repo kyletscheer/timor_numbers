@@ -1,65 +1,1020 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Timor Numbers</title>
-  <!-- Bootstrap CSS -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Bootstrap Icons -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css"
-    rel="stylesheet">
-  <link href="style.css" rel="stylesheet">
   <style>
-    footer {
-      padding: 10px 0;
-      border-top: solid 1px;
-      width: 100%;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #f8f9fa 0%, #fff5f0 100%);
+      min-height: 100vh;
+      padding: 20px;
+      transition: background-color 0.3s ease;
+    }
+
+    body.dark-mode {
+      background: linear-gradient(135deg, #1a1a1a 0%, #2d1810 100%);
+      color: #e0e0e0;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    header {
       text-align: center;
+      margin-bottom: 40px;
+      padding-top: 20px;
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 5vw, 2.5rem);
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(135deg, #dc3545 0%, #ffc107 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      font-size: clamp(0.9rem, 2.5vw, 1.1rem);
+      color: #6c757d;
+      font-weight: 400;
+    }
+
+    body.dark-mode .subtitle {
+      color: #a0a0a0;
+    }
+
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #e0e0e0;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      transition: all 0.3s ease;
+      z-index: 1000;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    body.dark-mode .theme-toggle {
+      background: #2d2d2d;
+      border-color: #444;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
+
+    .input-section {
+      background: white;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      margin-bottom: 30px;
+      border-left: 4px solid #dc3545;
+    }
+
+    body.dark-mode .input-section {
+      background: #2d2d2d;
+      border-left-color: #ffc107;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
+    }
+
+    input[type="number"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 14px 18px;
+      font-size: 16px;
+      border: 2px solid #e0e0e0;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+      background: #f8f9fa;
+    }
+
+    body.dark-mode input[type="number"] {
+      background: #1a1a1a;
+      border-color: #444;
+      color: #e0e0e0;
+    }
+
+    input[type="number"]:focus {
+      outline: none;
+      border-color: #dc3545;
+      box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+    }
+
+    .button-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 14px 24px;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(220, 53, 69, 0.3);
+    }
+
+    .btn-secondary {
+      background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+      color: #000;
+    }
+
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 193, 7, 0.3);
+    }
+
+    .results-header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .results-header h2 {
+      font-size: clamp(1.5rem, 4vw, 2rem);
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    body.dark-mode .results-header h2 {
+      color: #e0e0e0;
+    }
+
+    .number-display {
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #dc3545 0%, #ffc107 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      margin-bottom: 80px;
+    }
+
+    .language-card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+
+    body.dark-mode .language-card {
+      background: #2d2d2d;
+    }
+
+    .language-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+      border-left-color: #dc3545;
+    }
+
+    body.dark-mode .language-card:hover {
+      border-left-color: #ffc107;
+    }
+
+    .language-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    body.dark-mode .language-name {
+      color: #a0a0a0;
+    }
+
+    .language-number {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: #333;
+      line-height: 1.4;
+    }
+
+    body.dark-mode .language-number {
+      color: #e0e0e0;
+    }
+
+    footer {
       position: fixed;
       bottom: 0;
       left: 0;
+      right: 0;
+      background: white;
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #6c757d;
+      border-top: 1px solid #e0e0e0;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
     }
 
-    #result {
-      margin-bottom: 100px;
+    body.dark-mode footer {
+      background: #2d2d2d;
+      border-top-color: #444;
+      color: #a0a0a0;
+    }
+
+    footer a {
+      color: #dc3545;
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
+    body.dark-mode footer a {
+      color: #ffc107;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    @media (max-width: 640px) {
+      .input-group {
+        flex-direction: column;
+      }
+
+      input[type="number"] {
+        min-width: 100%;
+      }
+
+      .button-group {
+        flex-direction: column;
+      }
+
+      button {
+        width: 100%;
+      }
+
+      .results-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
-
 <body>
-  <main class="py-5">
-    <div class="container">
-      <!-- Header for the number generator application -->
-      <!-- Theme toggle moved outside collapse -->
-      <div class="theme-toggle" id="themeToggle" role="button" aria-label="Toggle theme">
-        <i class="bi bi-sun-fill"></i>
-      </div>
-      <h2>Timor Number Generator</h2>
-      <h3>Tetun, Portuguese, Bahasa, English, Mambae, Makasae, Tokodede, Fataluku, Waima'a, Midiki, Naueti, Makalero, Bunak, Bekais, Kemak, Baikeno Numbers
-      </h3>
-      <!-- Form to input a number and submit for conversion -->
-      <form onsubmit="spellOutNumber(event)">
-        <label for="number">Enter a number (1-9999):</label>
-        <input type="number" id="number" min="1" max="9999" required>
-        <button type="submit">Convert</button>
+  <div class="theme-toggle" onclick="toggleTheme()">
+    <span id="theme-icon">☀️</span>
+  </div>
+
+  <div class="container">
+    <header>
+      <h1>Timor Numbers</h1>
+      <p class="subtitle">Convert numbers to 16 East Timorese languages</p>
+      <p class="subtitle"><i>Tetun, Portuguese, Bahasa, English, Mambae, Makasae, Tokodede, Fataluku, Waima'a, Midiki, Naueti, Makalero, Bunak, Bekais, Kemak, Baikeno Numbers</i></p>
+
+    </header>
+
+    <div class="input-section">
+      <form onsubmit="convertNumber(event)">
+        <div class="input-group">
+          <input type="number" id="number" min="1" max="9999" placeholder="Enter a number (1-9999)" required>
+        </div>
+        <div class="button-group">
+          <button type="submit" class="btn-primary">Convert</button>
+          <button type="button" class="btn-secondary" onclick="randomNumber()">Random Number</button>
+        </div>
       </form>
-
-      <!-- Div to display the conversion results -->
-      <div id="result"></div>
     </div>
-  </main>
+
+    <div id="results" class="hidden">
+      <div class="results-header">
+        <h2>Number</h2>
+        <div class="number-display" id="number-display"></div>
+      </div>
+      <div class="results-grid" id="results-grid"></div>
+    </div>
+  </div>
+
   <footer>
-    <p>&copy; <a href="https://kylescheer.com" target="_blank">Kyle Scheer</a> 2024. Credit to Andy Kline, Max Calkins, Grayson Edgemon, and Sina
-      Barzegar. <a href="https://en.wikipedia.org/wiki/Languages_of_East_Timor" target="_blank">Timor Language
-        Information</a></p>
-    <h5><i>Have another language in Timor not yet included? Spotted an error? Let me know at
-        <u>hi@kylescheer.com.</u></i></h5>
-
+    <p>&copy; <a href="https://kylescheer.com" target="_blank">Kyle Scheer</a> 2024 | Credit to Andy Kline, Max Calkins, Grayson Edgemon, and Sina Barzegar. | <a href="https://en.wikipedia.org/wiki/Languages_of_East_Timor" target="_blank">Language Info</a><br>Have another language in Timor not yet included? Spotted an error? Let me know at <i>hi@kylescheer.com</i></p>
   </footer>
-  <script src="script.js"></script>
-  <script src="darkmode.js"></script>
-</body>
 
+  <script>
+    const translations = {
+      bahasa: {
+        numbers: { 1: "satu", 2: "dua", 3: "tiga", 4: "empat", 5: "lima", 6: "enam", 7: "tujuh", 8: "delapan", 9: "sembilan" },
+        tens: { 10: "sepuluh", 11: "sebelas", 12: "duabelas", 13: "tigabelas", 14: "empatbelas", 15: "limabelas", 16: "enambelas", 17: "tujuhbelas", 18: "delapanbelas", 19: "sembilanbelas", 20: "duapuluh", 30: "tigapuluh", 40: "empatpuluh", 50: "limapuluh", 60: "enampuluh", 70: "tujuhpuluh", 80: "delapanpuluh", 90: "sembilanpuluh" },
+        hundreds: { 100: "seratus", 200: "duaratus", 300: "tigaratus", 400: "empatratus", 500: "limaratus", 600: "enamratus", 700: "tujuhratus", 800: "delapanratus", 900: "sembilanratus" }
+      },
+      tetun: {
+        numbers: { 1: "ida", 2: "rua", 3: "tolu", 4: "haat", 5: "lima", 6: "neen", 7: "hitu", 8: "ualu", 9: "sia" },
+        tens: { 10: "sanulu" }
+      },
+      portuguese: {
+        numbers: { 1: "um", 2: "dois", 3: "três", 4: "quatro", 5: "cinco", 6: "seis", 7: "sete", 8: "oito", 9: "nove" },
+        tens: { 10: "dez", 11: "onze", 12: "doze", 13: "treze", 14: "catorze", 15: "quinze", 16: "dezesseis", 17: "dezessete", 18: "dezoito", 19: "dezenove", 20: "vinte", 30: "trinta", 40: "quarenta", 50: "cinquenta", 60: "sessenta", 70: "setenta", 80: "oitenta", 90: "noventa" },
+        hundreds: { 100: "cem", 200: "duzentos", 300: "trezentos", 400: "quatrocentos", 500: "quinhentos", 600: "seiscentos", 700: "setecentos", 800: "oitocentos", 900: "novecentos" }
+      },
+      tokodede: {
+        numbers: { 1: "iso", 2: "ru", 3: "telu", 4: "pat", 5: "lim", 6: "wowniso", 7: "wowru", 8: "wowtelu", 9: "wowpat" },
+        tens: { 10: "sagulu" }
+      },
+      mambae: {
+        numbers: { 1: "id", 2: "ru", 3: "te'ul", 4: "faat", 5: "lim", 6: "neen", 7: "hitu", 8: "ualu", 9: "sia" },
+        tens: { 10: "sakul" }
+      },
+      midiki: {
+        numbers: { 1: "see", 2: "kairuo", 3: "kaitelu", 4: "kaihaa", 5: "kailime", 6: "kainee", 7: "kaihitu", 8: "kaikaha", 9: "kaisiwe" },
+        tens: { 10: "basee", 20: "basa ruo", 30: "basa telu", 40: "basa haat", 50: "basa lime", 60: "basa nee", 70: "basa hitu", 80: "basa kaha", 90: "basa siwe" },
+        hundreds: { 100: "atu see", 200: "atu ruo", 300: "atu telu", 400: "atu haa", 500: "atu lime", 600: "atu nee", 700: "atu hitu", 800: "atu kaha", 900: "atu siwe" },
+        thousands: { 1000: "rihu see", 2000: "rihu ruo", 3000: "rihu telu", 4000: "rihu haa", 5000: "rihu lime", 6000: "rihu nee", 7000: "rihu hitu", 8000: "rihu kaha", 9000: "rihu siwe" }
+      },
+      makasae: {
+        numbers: { 1: "u", 2: "lola'e", 3: "lolitu", 4: "lolohaa", 5: "lima", 6: "daho", 7: "fitu", 8: "afo", 9: "siwe" },
+        tens: { 10: "ruru", 20: "ruru lola'e", 30: "ruru lolitu", 40: "ruru haa", 50: "ruru lima", 60: "ruru daho", 70: "ruru fitu", 80: "ruru afo", 90: "ruru siwe" },
+        hundreds: { 100: "rasa u", 200: "rasa lola'e", 300: "rasa lolitu", 400: "rasa haa", 500: "rasa lima", 600: "rasa daho", 700: "rasa fitu", 800: "rasa afo", 900: "rasa siwe" },
+        thousands: { 1000: "rihunu u", 2000: "rihunu lola'e", 3000: "rihunu lolitu", 4000: "rihunu haa", 5000: "rihunu lima", 6000: "rihunu daho", 7000: "rihunu fitu", 8000: "rihunu afo", 9000: "rihunu siwe" }
+      },
+      fataluku: {
+        numbers: { 1: "ūkani", 2: "ece", 3: "utu'e", 4: "fāte", 5: "līme", 6: "nēme", 7: "fitu", 8: "kafa", 9: "sīwa" },
+        tens: { 10: "ta'ane", 20: "ta'anece", 30: "ta'anutu'e", 40: "ta'anfāte", 50: "ta'anlime", 60: "ta'annēme", 70: "ta'anfitu", 80: "ta'ankafa", 90: "ta'ansīwa" },
+        hundreds: { 100: "rahukane", 200: "rahece", 300: "rahutu'e", 400: "rafāte", 500: "ralime", 600: "ranēme", 700: "rafitu", 800: "rakafa", 900: "rasīwa" },
+        thousands: { 1000: "rehunukane", 2000: "rehunece", 3000: "rehunutue", 4000: "rehunfāte", 5000: "rehunlime", 6000: "rehunnēme", 7000: "rehunfitu", 8000: "rehunkafa", 9000: "rehunsīwa" }
+      },
+      english: {
+        numbers: { 1: "one", 2: "two", 3: "three", 4: "four", 5: "five", 6: "six", 7: "seven", 8: "eight", 9: "nine" },
+        teens: { 10: "ten", 11: "eleven", 12: "twelve", 13: "thirteen", 14: "fourteen", 15: "fifteen", 16: "sixteen", 17: "seventeen", 18: "eighteen", 19: "nineteen" },
+        tens: { 20: "twenty", 30: "thirty", 40: "forty", 50: "fifty", 60: "sixty", 70: "seventy", 80: "eighty", 90: "ninety" },
+        hundreds: { 100: "one hundred", 200: "two hundred", 300: "three hundred", 400: "four hundred", 500: "five hundred", 600: "six hundred", 700: "seven hundred", 800: "eight hundred", 900: "nine hundred" },
+        thousands: { 1000: "one thousand", 2000: "two thousand", 3000: "three thousand", 4000: "four thousand", 5000: "five thousand", 6000: "six thousand", 7000: "seven thousand", 8000: "eight thousand", 9000: "nine thousand" }
+      },
+      waimaa: {
+        numbers: { 1: "see", 2: "kairuo", 3: "kaitelu", 4: "kaihaa", 5: "kailime", 6: "kainina", 7: "kaihitu", 8: "kaikaha", 9: "kaisiwe" },
+        tens: { 10: "basee", 20: "basa ruo", 30: "basa telu", 40: "basa haat", 50: "basa lime", 60: "basa nina", 70: "basa hitu", 80: "basa kaha", 90: "basa siwe" },
+        hundreds: { 100: "atu see", 200: "atu ruo", 300: "atu telu", 400: "atu haa", 500: "atu lime", 600: "atu nina", 700: "atu hitu", 800: "atu kaha", 900: "atu siwe" },
+        thousands: { 1000: "rihu see", 2000: "rihu ruo", 3000: "rihu telu", 4000: "rihu haa", 5000: "rihu lime", 6000: "rihu nina", 7000: "rihu hitu", 8000: "rihu kaha", 9000: "rihu siwe" }
+      },
+      naueti: {
+        numbers: { 1: "see", 2: "kai-rua", 3: "kai-telu", 4: "kai-haa", 5: "kai-lima", 6: "kai-lima resi see", 7: "kai-lima resi kai-rua", 8: "kai-lima resi kai-telu", 9: "kai-lima resi kai-haa" },
+        tens: { 10: "weli see", 11: "weli see resi see", 12: "weli see resi kai-rua", 13: "weli see resi kai-telu", 14: "weli see resi kai-haa", 15: "weli see resi kai-lima", 16: "weli see resi kai-lima resi see", 17: "weli see resi kai-lima resi kai-rua", 18: "weli see resi kai-lima resi kai-telu", 19: "weli see resi kai-lima resi kai-haa", 20: "weli kai-rua", 30: "weli kai-telu", 40: "weli kai-haa", 50: "weli kai-lima", 60: "weli kai-lima resi see", 70: "weli kai-lima resi kai-rua", 80: "weli kai-lima resi kai-telu", 90: "weli kai-lima resi kai-haa" },
+        hundreds: { 100: "rasa see", 200: "rasa kai-rua", 300: "rasa kai-telu", 400: "rasa kai-haa", 500: "rasa kai-lima", 600: "rasa kai-lima resi see", 700: "rasa kai-lima resi kai-rua", 800: "rasa kai-lima resi kai-telu", 900: "rasa kai-lima resi kai-haa" },
+        thousands: { 1000: "rihun see", 2000: "rihun kai-rua", 3000: "rihun kai-telu", 4000: "rihun kai-haa", 5000: "rihun kai-lima", 6000: "rihun kai-lima resi see", 7000: "rihun kai-lima resi kai-rua", 8000: "rihun kai-lima resi kai-telu", 9000: "rihun kai-lima resi kai-haa" }
+      },
+      makalero: {
+        numbers: { 1: "u", 2: "loloi", 3: "lolitu", 4: "fat", 5: "lima", 6: "douh", 7: "fitu", 8: "afo", 9: "siua" },
+        tens: { 10: "ru", 20: "ru loloi", 30: "ru lolitu", 40: "ru fat", 50: "ru lima", 60: "ru douh", 70: "ru fitu", 80: "ru afo", 90: "ru siua" },
+        hundreds: { 100: "rasa u", 200: "rasa loloi", 300: "rasa lolitu", 400: "rasa fat", 500: "rasa lima", 600: "rasa douh", 700: "rasa fitu", 800: "rasa afo", 900: "rasa siua" },
+        thousands: { 1000: "rihun u", 2000: "rihun loloi", 3000: "rihun lolitu", 4000: "rihun fat", 5000: "rihun lima", 6000: "rihun douh", 7000: "rihun fitu", 8000: "rihun afo", 9000: "rihun siua" }
+      },
+      bunak: {
+        numbers: { 1: "uen", 2: "hiloqo(n)", 3: "goniqo(n)", 4: "goniqil", 5: "gonciet", 6: "tomol", 7: "hitu", 8: "walu", 9: "siwe" },
+        tens: { 10: "sogo", 20: "sogo hiloqo(n)", 30: "sogo goniqo(n)", 40: "sogo goniqil", 50: "sogo gonciet", 60: "sogo tomol", 70: "sogo hitu", 80: "sogo walu", 90: "sogo siwe" },
+        hundreds: { 100: "atus uen", 200: "atus hiloqo(n)", 300: "atus goniqo(n)", 400: "atus goniqil", 500: "atus gonciet", 600: "atus tomol", 700: "atus hitu", 800: "atus walu", 900: "atus siwe" },
+        thousands: { 1000: "lihur uen", 2000: "lihur hiloqo(n)", 3000: "lihur goniqo(n)", 4000: "lihur goniqil", 5000: "lihur gonciet", 6000: "lihur tomol", 7000: "lihur hitu", 8000: "lihur walu", 9000: "lihur siwe" }
+      },
+      bekais: {
+        numbers: { 1: "isa", 2: "rua", 3: "tolu", 4: "hoat", 5: "lima", 6: "inan", 7: "hitu", 8: "walu", 9: "siwi" },
+        tens: { 10: "sakulu", 20: "ruakulu", 30: "tolukulu", 40: "hoatkulu", 50: "limakulu", 60: "inankulu", 70: "hitukulu", 80: "walukulu", 90: "siwikulu" },
+        hundreds: { 100: "atus isa", 200: "atus rua", 300: "atus tolu", 400: "atus hoat", 500: "atus lima", 600: "atus inan", 700: "atus hitu", 800: "atus walu", 900: "atus siwi" },
+        thousands: { 1000: "rihun isa", 2000: "rihun rua", 3000: "rihun tolu", 4000: "rihun hoat", 5000: "rihun lima", 6000: "rihun inan", 7000: "rihun hitu", 8000: "rihun walu", 9000: "rihun siwi" }
+      },
+      kemak: {
+        numbers: { 1: "sea", 2: "rua", 3: "telu", 4: "pat", 5: "lima", 6: "nem", 7: "itcu", 8: "balu", 9: "sibe" },
+        tens: { 10: "sapulu", 20: "gulu rua", 30: "gulu telu", 40: "gulu pat", 50: "gulu lima", 60: "gulu nem", 70: "gulu itcu", 80: "gulu balu", 90: "gulu sibe" },
+        hundreds: { 100: "atus sea", 200: "atus rua", 300: "atus telu", 400: "atus pat", 500: "atus lima", 600: "atus nem", 700: "atus itcu", 800: "atus balu", 900: "atus sibe" },
+        thousands: { 1000: "ribun sea", 2000: "ribun rua", 3000: "ribun telu", 4000: "ribun pat", 5000: "ribun lima", 6000: "ribun nem", 7000: "ribun itcu", 8000: "ribun balu", 9000: "ribun sibe" }
+      },
+      baikeno: {
+        numbers: { 1: "mese", 2: "nua", 3: "teun", 4: "haa", 5: "nim", 6: "nee", 7: "hitu", 8: "fanu", 9: "seo" },
+        tens: { 10: "boes", 20: "boo nua", 30: "boo teun", 40: "boo haa", 50: "boo nim", 60: "boo nee", 70: "boo hitu", 80: "boo fanu", 90: "boo seo" },
+        hundreds: { 100: "natun mese", 200: "natun nua", 300: "natun teun", 400: "natun haa", 500: "natun nim", 600: "natun nee", 700: "natun hitu", 800: "natun fanu", 900: "natun seo" },
+        thousands: { 1000: "nifun mese", 2000: "nifun nua", 3000: "nifun teun", 4000: "nifun haa", 5000: "nifun nim", 6000: "nifun nee", 7000: "nifun hitu", 8000: "nifun fanu", 9000: "nifun seo" }
+      }
+    };
+
+    function convertToBahasa(number) {
+      const { numbers, tens, hundreds } = translations.bahasa;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousands = Math.floor(number / 1000);
+        numStr += (thousands == 1) ? "seribu " : numbers[thousands] + " ribu ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10);
+        numStr += tens[tensPlace * 10] + " ";
+        number %= 10;
+      } else if (number >= 10) {
+        numStr += tens[number] + " ";
+        number = 0;
+      }
+      if (number > 0) {
+        numStr += numbers[number] + " ";
+      }
+      return numStr.trim();
+    }
+
+    function convertToTetun(number) {
+      const { numbers, tens } = translations.tetun;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousands = Math.floor(number / 1000);
+        numStr += "rihun " + numbers[thousands] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += "atus " + numbers[hundredsPlace] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10);
+        numStr += numbers[tensPlace] + "nulu";
+        if (number % 10 !== 0) {
+          numStr += " resin " + numbers[number % 10];
+        }
+        number = 0;
+      } else if (number >= 10) {
+        numStr += tens[10];
+        if (number > 10) {
+          numStr += " resin " + numbers[number % 10];
+        }
+        number = 0;
+      }
+      if (number > 0) {
+        numStr += numbers[number] + " ";
+      }
+      return numStr.trim();
+    }
+
+    function convertToPortuguese(number) {
+      const { numbers, tens, hundreds } = translations.portuguese;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousands = Math.floor(number / 1000);
+        numStr += (thousands === 1) ? "mil " : numbers[thousands] + " mil ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += (hundredsPlace === 1 && number % 100 === 0) ? "cem " : hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10);
+        numStr += tens[tensPlace * 10];
+        if (number % 10 !== 0) {
+          numStr += " e " + numbers[number % 10];
+        }
+        number = 0;
+      } else if (number >= 10) {
+        numStr += tens[number];
+        number = 0;
+      }
+      if (number > 0) {
+        numStr += (numStr ? " e " : "") + numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToTokodede(number) {
+      const { numbers, tens } = translations.tokodede;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousands = Math.floor(number / 1000);
+        numStr += "rihun " + numbers[thousands] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += "atus " + numbers[hundredsPlace] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10);
+        numStr += "sakui" + numbers[tensPlace] + " ";
+        if (number % 10 !== 0) {
+          numStr += " gresi " + numbers[number % 10];
+        }
+        number = 0;
+      } else if (number >= 10) {
+        numStr += tens[10];
+        if (number > 10) {
+          numStr += " gresi " + numbers[number % 10];
+        }
+        number = 0;
+      }
+      if (number > 0) {
+        numStr += numbers[number] + " ";
+      }
+      return numStr.trim();
+    }
+
+    function convertToMambae(number) {
+      const { numbers, tens } = translations.mambae;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousands = Math.floor(number / 1000);
+        numStr += "rihun " + numbers[thousands] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += "atus " + numbers[hundredsPlace] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10);
+        numStr += numbers[tensPlace] + "nul";
+        if (number % 10 !== 0) {
+          numStr += " resin " + numbers[number % 10];
+        }
+        number = 0;
+      } else if (number >= 10) {
+        numStr += tens[10];
+        if (number > 10) {
+          numStr += " resin " + numbers[number % 10];
+        }
+        number = 0;
+      }
+      if (number > 0) {
+        numStr += numbers[number] + " ";
+      }
+      return numStr.trim();
+    }
+
+    function convertToMidiki(number) {
+      const { numbers, tens, hundreds, thousands } = translations.midiki;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000) * 1000;
+        numStr += thousands[thousandsPlace] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100) * 100;
+        numStr += hundreds[hundredsPlace] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace];
+        number %= 10;
+        if (number > 0) {
+          numStr += " resi " + numbers[number];
+        }
+      } else if (number > 10) {
+        numStr += tens[10] + " resi " + numbers[number % 10];
+        number = 0;
+      } else if (number == 10) {
+        numStr += "basee";
+        number = 0;
+      } else if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToMakasae(number) {
+      const { numbers, tens, hundreds, thousands } = translations.makasae;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000) * 1000;
+        numStr += thousands[thousandsPlace] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100) * 100;
+        numStr += hundreds[hundredsPlace] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace];
+        number %= 10;
+        if (number > 0) {
+          numStr += " resi " + numbers[number];
+        }
+      } else if (number > 10) {
+        numStr += tens[10] + " resi " + numbers[number % 10];
+        number = 0;
+      } else if (number == 10) {
+        numStr += "ruru";
+        number = 0;
+      } else if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToFataluku(number) {
+      const { numbers, tens, hundreds, thousands } = translations.fataluku;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000);
+        numStr += thousands[thousandsPlace * 1000] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace] + " ";
+        number %= 10;
+      } else if (number > 10) {
+        numStr += "ta'ankan " + numbers[number % 10];
+        return numStr.trim();
+      } else if (number == 10) {
+        numStr += "ta'ane";
+        return numStr.trim();
+      }
+      if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToEnglish(number) {
+      const { numbers, teens, tens, hundreds, thousands } = translations.english;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000);
+        numStr += thousands[thousandsPlace * 1000] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace] + (number % 10 !== 0 ? "-" : "");
+        number %= 10;
+      } else if (number >= 10) {
+        numStr += teens[number];
+        return numStr.trim();
+      }
+      if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToWaimaa(number) {
+      const { numbers, tens, hundreds, thousands } = translations.waimaa;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000);
+        numStr += thousands[thousandsPlace * 1000] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace];
+        number %= 10;
+        if (number > 0) {
+          numStr += " resi " + numbers[number];
+        }
+      } else if (number > 10) {
+        numStr += tens[10] + " resi " + numbers[number % 10];
+        number = 0;
+      } else if (number == 10) {
+        numStr += "basee";
+        number = 0;
+      } else if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToNaueti(number) {
+      const { numbers, tens, hundreds, thousands } = translations.naueti;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000);
+        numStr += thousands[thousandsPlace * 1000] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace];
+        number %= 10;
+        if (number > 0) {
+          numStr += " resi " + numbers[number];
+        }
+      } else if (number > 10) {
+        numStr += tens[number];
+        number = 0;
+      } else if (number == 10) {
+        numStr += "weli see";
+        number = 0;
+      } else if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToMakalero(number) {
+      const { numbers, tens, hundreds, thousands } = translations.makalero;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000);
+        numStr += thousands[thousandsPlace * 1000] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace] + " ";
+        number %= 10;
+        if (number > 0) {
+          numStr += "resi-" + numbers[number];
+        }
+      } else if (number > 10) {
+        numStr += tens[10] + " resin-" + numbers[number % 10];
+        number = 0;
+      } else if (number === 10) {
+        numStr += tens[10];
+        number = 0;
+      } else if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToBunak(number) {
+      const { numbers, tens, hundreds, thousands } = translations.bunak;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000);
+        numStr += thousands[thousandsPlace * 1000] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace] + " ";
+        number %= 10;
+        if (number > 0) {
+          numStr += "resin " + numbers[number];
+        }
+      } else if (number > 10) {
+        numStr += tens[10] + " resin " + numbers[number % 10];
+        number = 0;
+      } else if (number === 10) {
+        numStr += tens[10];
+        number = 0;
+      } else if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToBekais(number) {
+      const { numbers, tens, hundreds, thousands } = translations.bekais;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000);
+        numStr += thousands[thousandsPlace * 1000] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace] + " ";
+        number %= 10;
+        if (number > 0) {
+          numStr += "resin " + numbers[number];
+        }
+      } else if (number >= 10) {
+        numStr += tens[Math.floor(number / 10) * 10];
+        if (number % 10 > 0) {
+          numStr += " resin " + numbers[number % 10];
+        }
+        number = 0;
+      } else if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToKemak(number) {
+      const { numbers, tens, hundreds, thousands } = translations.kemak;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000);
+        numStr += thousands[thousandsPlace * 1000] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace] + " ";
+        number %= 10;
+        if (number > 0) {
+          numStr += "resin " + numbers[number];
+        }
+      } else if (number >= 10) {
+        numStr += tens[Math.floor(number / 10) * 10];
+        if (number % 10 > 0) {
+          numStr += "-resin-" + numbers[number % 10];
+        }
+        number = 0;
+      } else if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function convertToBaikeno(number) {
+      const { numbers, tens, hundreds, thousands } = translations.baikeno;
+      let numStr = "";
+      if (number >= 1000) {
+        let thousandsPlace = Math.floor(number / 1000);
+        numStr += thousands[thousandsPlace * 1000] + " ";
+        number %= 1000;
+      }
+      if (number >= 100) {
+        let hundredsPlace = Math.floor(number / 100);
+        numStr += hundreds[hundredsPlace * 100] + " ";
+        number %= 100;
+      }
+      if (number >= 20) {
+        let tensPlace = Math.floor(number / 10) * 10;
+        numStr += tens[tensPlace] + " ";
+        number %= 10;
+        if (number > 0) {
+          numStr += numbers[number];
+        }
+      } else if (number >= 10) {
+        numStr += tens[Math.floor(number / 10) * 10];
+        if (number % 10 > 0) {
+          numStr += " " + numbers[number % 10];
+        }
+        number = 0;
+      } else if (number > 0) {
+        numStr += numbers[number];
+      }
+      return numStr.trim();
+    }
+
+    function capitalize(str) {
+      return str.charAt(0).toUpperCase() + str.slice(1);
+    }
+
+    function convertNumber(event) {
+      event.preventDefault();
+      const numberInput = document.getElementById('number');
+      let number = parseInt(numberInput.value);
+      
+      if (number < 1 || number > 9999) {
+        alert("Please enter a number between 1 and 9999.");
+        return;
+      }
+
+      displayResults(number);
+    }
+
+    function randomNumber() {
+      const number = Math.floor(Math.random() * 9999) + 1;
+      document.getElementById('number').value = number;
+      displayResults(number);
+    }
+
+    function displayResults(number) {
+      const resultsDiv = document.getElementById('results');
+      const numberDisplay = document.getElementById('number-display');
+      const resultsGrid = document.getElementById('results-grid');
+
+      numberDisplay.textContent = number;
+      resultsDiv.classList.remove('hidden');
+
+      const languages = [
+        { name: 'Tetun', func: convertToTetun },
+        { name: 'Portuguese', func: convertToPortuguese },
+        { name: 'Bahasa', func: convertToBahasa },
+        { name: 'English', func: convertToEnglish },
+        { name: 'Mambae', func: convertToMambae },
+        { name: 'Makasae', func: convertToMakasae },
+        { name: 'Tokodede', func: convertToTokodede },
+        { name: 'Fataluku', func: convertToFataluku },
+        { name: "Waima'a", func: convertToWaimaa },
+        { name: 'Midiki', func: convertToMidiki },
+        { name: 'Naueti', func: convertToNaueti },
+        { name: 'Makalero', func: convertToMakalero },
+        { name: 'Bunak', func: convertToBunak },
+        { name: 'Bekais', func: convertToBekais },
+        { name: 'Kemak', func: convertToKemak },
+        { name: 'Baikeno', func: convertToBaikeno }
+      ];
+
+      resultsGrid.innerHTML = '';
+      
+      languages.forEach(lang => {
+        const card = document.createElement('div');
+        card.className = 'language-card';
+        
+        const langName = document.createElement('div');
+        langName.className = 'language-name';
+        langName.textContent = lang.name;
+        
+        const langNumber = document.createElement('div');
+        langNumber.className = 'language-number';
+        langNumber.textContent = lang.func(number);
+        
+        card.appendChild(langName);
+        card.appendChild(langNumber);
+        resultsGrid.appendChild(card);
+      });
+
+      setTimeout(() => {
+        resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      const themeIcon = document.getElementById('theme-icon');
+      themeIcon.textContent = document.body.classList.contains('dark-mode') ? '🌙' : '☀️';
+    }
+  </script>
+</body>
 </html>
